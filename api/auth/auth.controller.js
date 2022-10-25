@@ -5,10 +5,9 @@ const logger = require('../../services/logger.service')
 async function signup(req, res) {
     try {
         const { username, password, nickname } = req.body;
-        // Never log passwords
-        // logger.debug(nickname + ', ' + username + ', ' + password)
         const account = await authService.signup(username, password, nickname);
         logger.debug(`auth.route - new account created: ` + JSON.stringify(account));
+        
         const user = await authService.login(username, password);
         req.session.user = user;
         res.json(user);
@@ -19,8 +18,8 @@ async function signup(req, res) {
 }
 
 async function login(req, res) {
-    const { username, password } = req.body;
     try {
+        const { username, password } = req.body;
         const user = await authService.login(username, password);
         req.session.user = user;
         res.json(user);
@@ -30,7 +29,7 @@ async function login(req, res) {
     }
 }
 
-async function logout(req, res){
+async function logout(req, res) {
     try {
         req.session.destroy();
         res.send({ msg: 'Logged out successfully' });
@@ -39,8 +38,20 @@ async function logout(req, res){
     }
 }
 
+async function checkIsAvailable(req, res) {
+    try {
+        const { username } = req.body;
+        const isAvailable = await authService.checkIsAvailable(username);
+        res.send(isAvailable);
+    } catch (err) {
+
+    }
+}
+
+
 module.exports = {
     signup,
     login,
-    logout
+    logout,
+    checkIsAvailable
 }

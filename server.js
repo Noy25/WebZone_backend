@@ -16,8 +16,8 @@ const session = expressSession({
 
 
 // Express App Config
-app.use(express.json());
 app.use(session);
+app.use(express.json());
 
 
 if (process.env.NODE_ENV === 'production') {
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'production') {
     // Configuring CORS
     const corsOptions = {
         // * Make sure origin contains the URL your FRONTEND is running on *
-        origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:8080', 'http://127.0.0.1:8080'], // 3000 is for react, 8080 is for vue
+        origin: ['http://localhost:3000', 'http://127.0.0.1:3000', 'https://localhost:3000', 'https://127.0.0.1:3000', 'http://localhost:8080', 'http://127.0.0.1:8080'], // 3000 is for react, 8080 is for vue
         credentials: true
     }
     app.use(cors(corsOptions));
@@ -37,14 +37,12 @@ if (process.env.NODE_ENV === 'production') {
 // Import routes
 const wapRoutes = require('./api/wap/wap.routes');
 const authRoutes = require('./api/auth/auth.routes');
-const userRoutes = require('./api/user/user.routes');
 const { connectSockets } = require('./services/socket.service');
 
 
 // Use routes
 app.use('/api/wap', wapRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/user', userRoutes);
 connectSockets(http, session);
 
 
